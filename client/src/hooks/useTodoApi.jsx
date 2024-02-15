@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import axios from 'axios'
 import { useState } from 'react'
+import { useTodos } from '../context/TodoContext'
 
 const api = axios.create({
 	baseURL: 'https://localhost:7193/api',
@@ -10,6 +11,7 @@ export const useTodoApi = () => {
 	const [todos, setTodos] = useState([])
 	const [pagingData, setPagingData] = useState([])
 	const [isLoading, setIsLoading] = useState(false)
+	const { setShowAddNew } = useTodos()
 
 	const fetchTodos = () => {
 		setIsLoading(true)
@@ -17,6 +19,7 @@ export const useTodoApi = () => {
 			.get('/todos')
 			.then((response) => {
 				setTodos(response.data?.data)
+				setShowAddNew(response.data?.data.length > 0)
 				setPagingData({
 					currentPage: response.data?.currentPage,
 					totalPages: response.data?.totalPages,
